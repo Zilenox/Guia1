@@ -60,6 +60,12 @@ public class Vehiculo {
      * @param marca the marca to set
      */
     public void setMarca(String marca) {
+        if(!CheckUppercase(marca))
+        {
+            //throw new IllegalArgumentException("LA PATENTE TIENE QUE SER EN MAYUSCULAS");
+            System.out.println("LA MARCA TIENE QUE SER EN MAYUSCULAS");
+            return;
+        }
         this.marca = marca;
     }
 
@@ -74,6 +80,12 @@ public class Vehiculo {
      * @param modelo the modelo to set
      */
     public void setModelo(String modelo) {
+        if(!CheckUppercase(modelo))
+        {
+            //throw new IllegalArgumentException("LA PATENTE TIENE QUE SER EN MAYUSCULAS");
+            System.out.println("EL MODELO TIENE QUE SER EN MAYUSCULAS");
+            return;
+        }
         this.modelo = modelo;
     }
 
@@ -131,7 +143,7 @@ public class Vehiculo {
     
     private boolean CheckUppercase(String str_input){
         char[] str_in_array = str_input.toCharArray();
-        System.out.println("lenght:"+str_input.length());
+        //System.out.println("lenght:"+str_input.length());
         for (int i=0; i< str_input.length(); i++)
         {
             if(str_in_array[i] < 'A' || str_in_array[i] > 'Z')
