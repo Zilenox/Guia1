@@ -5,6 +5,9 @@
 
 package grupo4.guia1;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 /**
  *
  * @author ibohm
@@ -12,11 +15,13 @@ package grupo4.guia1;
 public class Guia1 {
 
     public static void main(String[] args) {
-        Vehiculo v = new Vehiculo("XX-YY-22","KIA","HFG",2019);
+        Vehiculo V = new Vehiculo("XX-YY-22","KIA","HFG",2019);
         Cliente C = new Cliente("17000000-K", "Igor");
-    
+        
+        Calendar fecha_inicio = new GregorianCalendar();
+        fecha_inicio.add(Calendar.MONTH, 1);
+        Arriendo r = new Arriendo(1,fecha_inicio,5,V,C);
+
+        
     }
-    
-    
-    
 }
