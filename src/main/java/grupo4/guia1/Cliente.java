@@ -79,7 +79,7 @@ public class Cliente {
         
         if(str_in_array[8] != '-')
             return false;
-        else if (!(str_in_array[9] > '0' && str_in_array[9] <= '9'))  
+        else if (!(str_in_array[9] >= '0' && str_in_array[9] <= '9'))  
         {
             if(str_in_array[9] != 'k' && str_in_array[9] != 'K')
                 return false;
