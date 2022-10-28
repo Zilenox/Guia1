@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package grupo4.guia1;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 /**
  *
@@ -10,18 +11,32 @@ import java.util.GregorianCalendar;
  */
 public class Arriendo {
     private int Numero;
-    private GregorianCalendar FechaArriendo; 
+    private Calendar FechaArriendo; 
     private int Dias;
     private Vehiculo vehiculo;
     private Cliente cliente;
     
-    public Arriendo(int Numero, GregorianCalendar FechaArriendo,int Dias, Vehiculo vehiculo, Cliente cliente){
+    public Arriendo(int Numero, Calendar FechaArriendo,int Dias, Vehiculo vehiculo, Cliente cliente){
+        
         setNumero(Numero);
         setFechaArriendo(FechaArriendo);
         setDias(Dias);
         setVehiculo(vehiculo);
         setCliente(cliente);
+        if (!validarArriendo()) {
+            throw new IllegalArgumentException("VEHICULO Ó CLIENTE INVÁLIDOS");
+            /*System.out.println("VEHICULO Ó CLIENTE INVÁLIDOS");
+            return;*/
+        }
         
+        Calendar F_entrega= new GregorianCalendar();
+        F_entrega.set(Calendar.DAY_OF_MONTH,getFechaArriendo().get(Calendar.DAY_OF_MONTH));
+        F_entrega.set(Calendar.MONTH,getFechaArriendo().get(Calendar.MONTH));
+        F_entrega.set(Calendar.YEAR,getFechaArriendo().get(Calendar.YEAR));
+        F_entrega.add(Calendar.DAY_OF_MONTH, getDias());
+        Devolucion d= new Devolucion(F_entrega);
+        
+        getVehiculo().setCondicion('A');
     }
 
     /**
@@ -41,14 +56,14 @@ public class Arriendo {
     /**
      * @return the FechaArriendo
      */
-    public GregorianCalendar getFechaArriendo() {
+    public Calendar getFechaArriendo() {
         return FechaArriendo;
     }
 
     /**
      * @param FechaArriendo the FechaArriendo to set
      */
-    public void setFechaArriendo(GregorianCalendar FechaArriendo) {
+    public void setFechaArriendo(Calendar FechaArriendo) {
         this.FechaArriendo = FechaArriendo;
     }
 
@@ -63,7 +78,12 @@ public class Arriendo {
      * @param Dias the Dias to set
      */
     public void setDias(int Dias) {
-        this.Dias = Dias;
+        if(!(Dias> 1 && Dias<10))
+        {
+            System.out.println("EL ARRIENDO DEBE SER ENTRE 2 Y 9 DIAS");
+            return;
+        }
+            this.Dias = Dias;
     }
 
     /**
@@ -94,5 +114,28 @@ public class Arriendo {
         this.cliente = cliente;
     }
     
-    
+    private boolean validarArriendo()
+    {
+        if(getVehiculo().getCondicion() != 'D' || getCliente().isVigente() == false ) {
+            //si condicion vehiculo no es disponible, o el cliente no esta vigente
+            return false;
+        }
+        return true;
+    }
+    @Override
+    public String toString() {
+        /*
+            Example
+            System.out.println("Date: " + getFechaArriendo().get(Calendar.DAY_OF_MONTH));
+            System.out.println("Month: "+ getFechaArriendo().get(Calendar.MONTH));
+            System.out.println("Year: " + getFechaArriendo().get(Calendar.YEAR));
+        
+        */
+        
+        return  "Numero  arriendo: " + getNumero()+ "\t" +
+                "Fecha arriendo: " + getFechaArriendo()+ "\t" +
+                "Días arriendo: " + getDias();
+        
+ 
+    }
 }
