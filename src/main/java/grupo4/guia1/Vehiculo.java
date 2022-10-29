@@ -34,21 +34,25 @@ public class Vehiculo {
      * @param patente the patente to set
      */
     public void setPatente(String patente) {
-        if (patente.length() != 8) {
-            //throw new IllegalArgumentException("EL LARGO DE LA PATENTE DEBE SER DE 8");
-            System.out.println("EL LARGO DE LA PATENTE TIENE QUE SER DE 8 CARACTERES");
+        if (!Check_patente(patente)) {
+            Vehicule_messages("EL LARGO DE LA PATENTE TIENE QUE SER DE 8 CARACTERES");
             return;
         }
         if(!CheckUppercase(patente))
         {
-            //throw new IllegalArgumentException("LA PATENTE TIENE QUE SER EN MAYUSCULAS");
-            System.out.println("LA PATENTE TIENE QUE SER EN MAYUSCULAS");
+            Vehicule_messages("LA PATENTE TIENE QUE SER EN MAYUSCULAS");
             return;
         }
         
         this.patente = patente;
     }
-
+    
+    public boolean Check_patente(String patente){
+        if(patente.length() != 8){
+            return false;
+        }
+        return true;
+    }
     /**
      * @return the marca
      */
@@ -62,8 +66,7 @@ public class Vehiculo {
     public void setMarca(String marca) {
         if(!CheckUppercase(marca))
         {
-            //throw new IllegalArgumentException("LA PATENTE TIENE QUE SER EN MAYUSCULAS");
-            System.out.println("LA MARCA TIENE QUE SER EN MAYUSCULAS");
+            Vehicule_messages("LA MARCA TIENE QUE SER EN MAYUSCULAS");
             return;
         }
         this.marca = marca;
@@ -82,8 +85,7 @@ public class Vehiculo {
     public void setModelo(String modelo) {
         if(!CheckUppercase(modelo))
         {
-            //throw new IllegalArgumentException("LA PATENTE TIENE QUE SER EN MAYUSCULAS");
-            System.out.println("EL MODELO TIENE QUE SER EN MAYUSCULAS");
+            Vehicule_messages("EL MODELO TIENE QUE SER EN MAYUSCULAS");
             return;
         }
         this.modelo = modelo;
@@ -100,21 +102,23 @@ public class Vehiculo {
      * @param anno the anno to set
      */
     public void setAnno(int anno) {
-        GregorianCalendar calendar = new GregorianCalendar();
         
-        int currentYear= calendar.get(calendar.YEAR);
-        //System.out.printf("current year: %d\n", currentYear);
-        if (anno < 2000  || anno > currentYear) {     
-            /*throw new IllegalArgumentException("EL AÑO DE FABRICACIÓN DEBE"
-                    + " SER MAYOR O IGUAL AL AÑO 2000 Y MENOR O IGUAL QUE EL "
-                    + " AÑO ACTUAL");*/
-            System.out.println("EL AÑO DE FABRICACIÓN DEBE"
+        if(!Check_año_fabricacion(anno)){
+            Vehicule_messages("EL AÑO DE FABRICACIÓN DEBE"
                     + " SER MAYOR O IGUAL AL AÑO 2000 Y MENOR O IGUAL QUE EL "
                     + " AÑO ACTUAL");
         }
         this.anno = anno;
     }
-
+    
+    public boolean Check_año_fabricacion(int anho){
+        GregorianCalendar calendar = new GregorianCalendar();
+        int currentYear= calendar.get(calendar.YEAR);
+        if(anho < 2000  || anho > currentYear) {     
+            return false;
+        }
+        return true;
+    }
     /**
      * @return the condicion
      */
@@ -127,12 +131,15 @@ public class Vehiculo {
      */
     public void setCondicion(char condicion) {
         if (condicion != 'A' && condicion != 'D' && condicion != 'M') {
-            //throw new IllegalArgumentException("LA CONDICIÓN DEL VEHÍCULO NO ES VÁLIDA");
-            System.out.println("LA CONDICIÓN DEL VEHÍCULO NO ES VÁLIDA");
+            Vehicule_messages("LA CONDICIÓN DEL VEHÍCULO NO ES VÁLIDA");
             return;
+        }
+        if(this.condicion == 'A' && condicion == 'M'){
+            Vehicule_messages("VEHICULO ACTUALMENTE ARRENDADO, NO SE PUEDE LLEVAR A MANTENCION");
         }
         this.condicion = condicion;
     }
+    
     @Override
     public String toString() {
         return  "PATENTE: " + getPatente() + "\t" +
@@ -141,9 +148,14 @@ public class Vehiculo {
                 "CONDICION: " + getCondicion();
     }
     
+    private void Vehicule_messages(String data){
+        System.out.println(data);
+    }
+    
+    
     private boolean CheckUppercase(String str_input){
         char[] str_in_array = str_input.toCharArray();
-        //System.out.println("lenght:"+str_input.length());
+
         for (int i=0; i< str_input.length(); i++)
         {
             if(str_in_array[i] < 'A' || str_in_array[i] > 'Z')
