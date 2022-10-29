@@ -172,7 +172,7 @@ public class Arriendo {
                 + getFechaArriendo().get(Calendar.DAY_OF_MONTH)+ "-"
                 + month_plusone + "-"      
                 + getFechaArriendo().get(Calendar.YEAR)+ "\t"  
-                + getCliente().getCedula() + "/" + getCliente().getNombre() + "\t\t"
+                + getCliente().getCedula() + "/" + getCliente().getNombre() + "\t"
                 + getDias() + " dias\t\t" +getTOTAL() + "\n"
                 + "--------------------------------------------------------------------------\n"
                 + "\n\n\t\t\t\t\t\t\t-------------\n\t\t\t\t\t\t\t FIRMA CLIENTE ");
