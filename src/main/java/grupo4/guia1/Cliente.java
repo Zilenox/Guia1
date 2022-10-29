@@ -31,18 +31,12 @@ public class Cliente {
      * @param Cedula the Cedula to set
      */
     public void setCedula(String Cedula) {
-        if (Cedula.length() != 10) {
-            //throw new IllegalArgumentException("EL LARGO DE LA PATENTE DEBE SER DE 8");
-            System.out.println("EL LARGO DE LA CEDULA TIENE QUE SER DE 10 CARACTERES");
-            return;
-        }
         if(!check_rut(Cedula)){
-            System.out.println("EL FORMATO DE LA CEDULA ES INCORRECTO");
             return;
         }
         this.Cedula = Cedula;
     }
-
+    
     /**
      * @return the Nombre
      */
@@ -75,23 +69,28 @@ public class Cliente {
     private boolean check_rut(String str_input){
         char[] str_in_array = str_input.toCharArray();
         
-        
-        
-        if(str_in_array[8] != '-')
+        if (str_input.length() != 10) {
+            CLIENTE_messages("EL LARGO DE LA CEDULA TIENE QUE SER DE 10 CARACTERES");
             return false;
-        else if (!(str_in_array[9] >= '0' && str_in_array[9] <= '9'))  
-        {
-            if(str_in_array[9] != 'k' && str_in_array[9] != 'K')
-                return false;
         }
+        
+        if(str_in_array[8] != '-' || !(str_in_array[9] >= '0' && str_in_array[9] <= '9')) {
+            CLIENTE_messages("EL FORMATO DE LA CEDULA ES INCORRECTO");
+            return false;
+        }
+        
         for (int i=0; i< 8; i++)
         {
-            if(str_in_array[i] < '0' || str_in_array[i] > '9')
-            {
+            if(str_in_array[i] < '0' || str_in_array[i] > '9'){
+                CLIENTE_messages("EL FORMATO DE LA CEDULA ES INCORRECTO");
                 return false;
             }
         }
         
         return true;
+    }
+    
+    private void CLIENTE_messages(String data){
+        System.out.println(data);
     }
 }
