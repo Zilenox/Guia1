@@ -15,30 +15,23 @@ public class Arriendo {
     private int Dias;
     private Vehiculo vehiculo;
     private Cliente cliente;
+    private int precio_diario;
+    private Devolucion devolucion;
     
-    public Arriendo(int Numero, Calendar FechaArriendo,int Dias, Vehiculo vehiculo, Cliente cliente){
+    public Arriendo(int Numero, Calendar FechaArriendo,int Dias, Vehiculo vehiculo, Cliente cliente, int precio_diario){
         
+        /*if (!EvaluarArriendo(vehiculo,cliente)) {
+            return;
+        }*/
         setNumero(Numero);
         setFechaArriendo(FechaArriendo);
         setDias(Dias);
         setVehiculo(vehiculo);
         setCliente(cliente);
-        if (!validarArriendo()) {
-            throw new IllegalArgumentException("VEHICULO Ó CLIENTE INVÁLIDOS");
-            /*System.out.println("VEHICULO Ó CLIENTE INVÁLIDOS");
-            return;*/
-        }
+        setPrecio_diario(precio_diario);
         
-        Calendar F_entrega= new GregorianCalendar();
-        F_entrega.set(Calendar.DAY_OF_MONTH,getFechaArriendo().get(Calendar.DAY_OF_MONTH));
-        F_entrega.set(Calendar.MONTH,getFechaArriendo().get(Calendar.MONTH));
-        F_entrega.set(Calendar.YEAR,getFechaArriendo().get(Calendar.YEAR));
-        F_entrega.add(Calendar.DAY_OF_MONTH, getDias());
-        Devolucion d= new Devolucion(F_entrega);
-        
-        getVehiculo().setCondicion('A');
-    }
-
+   }
+    
     /**
      * @return the Numero
      */
@@ -78,14 +71,19 @@ public class Arriendo {
      * @param Dias the Dias to set
      */
     public void setDias(int Dias) {
-        if(!(Dias> 1 && Dias<10))
-        {
-            System.out.println("EL ARRIENDO DEBE SER ENTRE 2 Y 9 DIAS");
+        if(!Validar_dias(Dias)){
             return;
         }
             this.Dias = Dias;
     }
-
+    
+    public boolean Validar_dias(int dias){
+        if(!(dias> 1 && dias<10)){
+            ARRIENDO_messages("ERROR EL ARRIENDO DEBE SER ENTRE 2 Y 9 DIAS");
+            return false;
+        }
+        return true;
+    }
     /**
      * @return the vehiculo
      */
@@ -113,29 +111,88 @@ public class Arriendo {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-    
-    private boolean validarArriendo()
+        /**
+     * @return the precio_diario
+     */
+    public int getPrecio_diario() {
+        return precio_diario;
+    }
+
+    /**
+     * @param precio_diario the precio_diario to set
+     */
+    public void setPrecio_diario(int precio_diario) {
+        this.precio_diario = precio_diario;
+    }
+    public boolean EvaluarArriendo(Vehiculo v,Cliente c)
     {
-        if(getVehiculo().getCondicion() != 'D' || getCliente().isVigente() == false ) {
-            //si condicion vehiculo no es disponible, o el cliente no esta vigente
+        if(v.getCondicion() != 'D' || c.isVigente() == false ) {
+            ARRIENDO_messages("VEHICULO Ó CLIENTE INVÁLIDOS");
             return false;
         }
         return true;
     }
-    @Override
-    public String toString() {
-        /*
-            Example
-            System.out.println("Date: " + getFechaArriendo().get(Calendar.DAY_OF_MONTH));
-            System.out.println("Month: "+ getFechaArriendo().get(Calendar.MONTH));
-            System.out.println("Year: " + getFechaArriendo().get(Calendar.YEAR));
-        
-        */
-        
-        return  "Numero  arriendo: " + getNumero()+ "\t" +
-                "Fecha arriendo: " + getFechaArriendo()+ "\t" +
-                "Días arriendo: " + getDias();
-        
- 
+    
+    public boolean Ingresar_arriendo(){
+        if(!EvaluarArriendo(this.vehiculo, this.cliente)){
+            return false;
+        }
+        vehiculo.setCondicion('A');
+        return true;
+    }
+    
+    public void Ingresar_devolucion(Vehiculo veh){
+        Calendar F_entrega= new GregorianCalendar();
+        Devolucion d= new Devolucion(this,F_entrega);
+        if(d.ValidarDevolucion( veh)){
+            ARRIENDO_messages("Devolucion correcta");
+        }
+        else
+            ARRIENDO_messages("Devolucion incorrecta");
+    }
+    
+    
+    public String getTOTAL(){
+        Integer total = getDias()*getPrecio_diario();
+        return total.toString();
+    }
+    
+    
+    
+    public void GENERAR_TICKET() {
+        int month_plusone =getFechaArriendo().get(Calendar.MONTH) +1;
+        ARRIENDO_messages("--------------------------------------------------------------------------\n"
+                + "\t\t\t" + "TICKET ARRIENDO VEHICULO\n"
+                + "\t\t\t" + "NUMERO ARRIENDO\t:" + getNumero()+ "\n" 
+                + "\t\t\t" + "VEHICULO \t:" + getVehiculo().getPatente() + " " 
+                + getVehiculo().getMarca() + " " + getVehiculo().getModelo() + "\n"
+                + "\t\t\t" + "PRECIO DIARIO\t$" + getPrecio_diario() + "\n\n"
+                + "FECHA\t\tCLIENTE\t\t\tDIAS\t\tA PAGAR\n"
+                + "--------------------------------------------------------------------------\n"
+                + getFechaArriendo().get(Calendar.DAY_OF_MONTH)+ "-"
+                + month_plusone + "-"      
+                + getFechaArriendo().get(Calendar.YEAR)+ "\t"  
+                + getCliente().getCedula() + "/" + getCliente().getNombre() + "\t\t"
+                + getDias() + " dias\t\t" +getTOTAL() + "\n"
+                + "--------------------------------------------------------------------------\n"
+                + "\n\n\t\t\t\t\t\t\t-------------\n\t\t\t\t\t\t\t FIRMA CLIENTE ");
+     }
+
+    /**
+     * @return the devolucion
+     */
+    public Devolucion getDevolucion() {
+        return devolucion;
+    }
+
+    /**
+     * @param devolucion the dev to set
+     */
+    public void setDevolucion(Devolucion devolucion) {
+        this.devolucion = devolucion;
+    }
+
+    private void ARRIENDO_messages(String data){
+        System.out.println(data);
     }
 }
